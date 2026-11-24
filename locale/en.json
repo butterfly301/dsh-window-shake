@@ -1,0 +1,1 @@
+{"meta":{"title":"Window shake detector","description":"Samples desktop window horizontal motion at 20 Hz and broadcasts a decoupled shake event while respecting reduced motion."}}
