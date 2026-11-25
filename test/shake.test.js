@@ -168,3 +168,47 @@ test('configForms controls enabled polling state and live cooldownMs updates', (
   assert.equal(h.hasInterval, false);
   h.dispose();
 });
+
+test('declares inject configForms and passes strict Cordis Proxy property access checks', () => {
+  let loadedMod = null;
+  const sandbox = {
+    window: {
+      __ModuleLoader__: { load(m) { loadedMod = m; } },
+      screenX: 0,
+      innerWidth: 1200,
+      innerHeight: 800,
+      matchMedia: () => ({ matches: true, addEventListener() {}, removeEventListener() {} }),
+    },
+    document: { hidden: false },
+    navigator: { userAgent: 'Mozilla/5.0 Electron/31.0.0' },
+    setInterval: () => 1,
+    clearInterval: () => {},
+  };
+  vm.runInNewContext(CLIENT_CODE, sandbox);
+
+  const plugin = loadedMod.factory();
+  assert.equal(Array.isArray(plugin.inject), true);
+  assert.equal(plugin.inject.includes('configForms'), true);
+
+  const declared = new Set(plugin.inject);
+  const rawCtx = {
+    configForms: {
+      get: () => ({
+        getSnapshot: () => ({ status: 'ready', value: { enabled: true, cooldownMs: 60_000 } }),
+        subscribe: () => () => {},
+      }),
+    },
+    effect: (fn) => fn(),
+  };
+  const strictCtx = new Proxy(rawCtx, {
+    get(target, prop) {
+      if (prop === 'effect' || prop === 'inject' || prop === 'on' || declared.has(prop)) {
+        return target[prop];
+      }
+      throw new Error(`cannot get property "${String(prop)}" without inject`);
+    },
+  });
+
+  const cleanup = plugin.apply(strictCtx);
+  cleanup?.();
+});

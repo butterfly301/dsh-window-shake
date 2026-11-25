@@ -1,6 +1,6 @@
 {
   "name": "dsh-window-shake",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Detects vigorous horizontal desktop window shaking at 20 Hz and broadcasts a decoupled dsh:window-shake event.",
   "license": "MIT",

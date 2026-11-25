@@ -121,6 +121,7 @@ window.__ModuleLoader__.load({
     }
 
     return {
+      inject: ['configForms'],
       apply(ctx) {
         return ctx.effect(() => {
           if (!isDesktopHost()) return undefined;
@@ -184,17 +185,7 @@ window.__ModuleLoader__.load({
             return () => { try { unsub?.(); } catch {} };
           };
 
-          let stopForm = () => {};
-          if (ctx.configForms && typeof ctx.configForms.get === 'function') {
-            stopForm = bindConfigForm(ctx.configForms);
-          } else if (typeof ctx.inject === 'function') {
-            stopForm = ctx.inject(['configForms'], (scope) => {
-              if (typeof scope?.effect === 'function') {
-                return scope.effect(() => bindConfigForm(scope.configForms));
-              }
-              return bindConfigForm(scope?.configForms);
-            });
-          }
+          const stopForm = bindConfigForm(ctx.configForms);
 
           const mq = typeof window.matchMedia === 'function'
             ? window.matchMedia('(prefers-reduced-motion: reduce)')
