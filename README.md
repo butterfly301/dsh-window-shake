@@ -2,6 +2,8 @@
 
 一个独立的轻量 DSH 客户端插件，在桌面端以约 20 Hz 采样 `window.screenX`。当 1.2 秒内出现至少 3 次方向反转且累计水平位移达到 150px 时，执行冷却并向全局派发 `dsh:window-shake` 自定义事件，供海景背景或状态词轮换等插件各自独立订阅。
 
+此包是 [`dsh-pirate-mode`](https://github.com/butterfly301/dsh-pirate-mode) 的组件，也可以单独安装使用。
+
 开启系统「减少动态效果」时彻底禁用，不注册采样器。
 
 ## 独立安装与配置
