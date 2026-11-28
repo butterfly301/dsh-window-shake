@@ -3,7 +3,7 @@ window.__ModuleLoader__.load({
   factory() {
     const NS = 'dsh-window-shake';
     const EVENT_NAME = 'dsh:window-shake';
-    const SAMPLE_MS = 50; // ~20 Hz
+    const SAMPLE_MS = 50;
     const WINDOW_MS = 1200;
     const MIN_REVERSALS = 3;
     const MIN_DISPLACEMENT_PX = 150;
